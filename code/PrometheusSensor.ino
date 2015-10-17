@@ -1,20 +1,15 @@
-
-
-/* DHTServer - ESP8266 Webserver with a DHT sensor as an input
-
-   Based on ESP8266Webserver, DHTexample, and BlinkWithoutDelay (thank you)
-
-   Version 1.0  5/3/2014  Version 1.0   Mike Barela for Adafruit Industries
-*/
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <DHT.h>
 #include <Wire.h>
 #include <Adafruit_BMP085.h>
 #define DHTTYPE DHT22
+
+// Note that sometimes GPIO4 and GPIO5 are switched on different
+// models of the ESP8266.  (And sometimes they are even labelled
+// incorrectly!)
 #define DHTPIN  5
 #define DHTPWR  13
-
  
 #define WIFI_SSID           "Embedded Pie"
 #define WIFI_PASSWORD       "embedded"
@@ -23,62 +18,62 @@
 #define SERVER_PORT         9091
 
 #define METRICS_JOB         "env_sensor"
-#define METRICS_INSTANCE    "Cabin"
+#define METRICS_INSTANCE    "LivingRoom"
 
-const String metrics_url = "/metrics/job/" + String(METRICS_JOB) + "/instance/" + String(METRICS_INSTANCE);
+const String metrics_url = "/metrics/job/" + String(METRICS_JOB) +
+                           "/instance/" + String(METRICS_INSTANCE);
 
 ADC_MODE(ADC_VCC);
  
-// Initialize DHT sensor 
-// NOTE: For working with a faster than ATmega328p 16 MHz Arduino chip, like an ESP8266,
-// you need to increase the threshold for cycle counts considered a 1 or 0.
-// You can do this by passing a 3rd parameter for this threshold.  It's a bit
-// of fiddling to find the right value, but in general the faster the CPU the
-// higher the value.  The default for a 16mhz AVR is a value of 6.  For an
-// Arduino Due that runs at 84mhz a value of 30 works.
-// This is for the ESP8266 processor on ESP-01 
+// Initialize DHT sensor NOTE: For working with a faster than ATmega328p 16 MHz
+// Arduino chip, like an ESP8266, you need to increase the threshold for cycle
+// counts considered a 1 or 0.  You can do this by passing a 3rd parameter for
+// this threshold.  It's a bit of fiddling to find the right value, but in
+// general the faster the CPU the higher the value.  The default for a 16mhz
+// AVR is a value of 6.  For an Arduino Due that runs at 84mhz a value of 30
+// works.  This is for the ESP8266 processor on ESP-01 
 DHT dht(DHTPIN, DHTTYPE, 11); // 11 works fine for ESP8266
 
 Adafruit_BMP085 bmp;
 
-// Generally, you should use "unsigned long" for variables that hold time
-unsigned long previousMillis = 0;        // will store last temp was read
-const long interval = 2000;              // interval at which to read sensor
-
+unsigned long previousMillis = 0;
+const long interval = 2000;
 
 void setup(void)
 {
-  // You can open the Arduino IDE Serial Monitor window to see what the code is doing
-  Serial.begin(115200);  // Serial connection from ESP-01 via 3.3v console cable
-  // Power on the DHT22 sensor first.
+  Serial.begin(115200);
+  // Power on the sensors first.  Both the DHT22 and the bmp180
+  // are very low power and can be powered from a ESP8266 GPIO pin.
   pinMode(DHTPWR, OUTPUT);
   digitalWrite(DHTPWR, HIGH);
-  dht.begin();           // initialize temperature sensor
+  dht.begin();
   
   // Connect to WiFi network
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("\n\r \n\rWorking to connect");
+  Serial.print("\n\r \n\rConnecting to WiFi.");
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     delay(250);
     Serial.print(".");
   }
   Serial.println("");
+
+  // Initialize the Software I2C library to talk to the BMP180 sensor.
   Wire.pins(12, 14);
   if (!bmp.begin()) {
     Serial.println("BMP init error!");
   }
-  Serial.println("DHT Weather Reading Client");
+  Serial.println("ESP8266 Weather Sensor");
   Serial.print("Connected to ");
   Serial.println(WIFI_SSID);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-
 }
 
 String makeSensorVar(const String& name) {
   return "# TYPE env_sensor_" + name + " gauge\n" +
-         "env_sensor_" + name + "{chipid=\"" + String(ESP.getChipId()) + "\",location=\"" + METRICS_INSTANCE + "\"}";
+         "env_sensor_" + name + "{chipid=\"" + String(ESP.getChipId()) +
+         "\",location=\"" + METRICS_INSTANCE + "\"}";
 }
 
 void sendMetrics(const String& metricString) {
@@ -109,14 +104,6 @@ bool isValidHumidity(float humidity) {
 
 bool isValidTemp(float temp) {
   return (!isnan(temp) && temp >= -100 && temp <= 212);
-}
-
-float pascalsToInchesHg(int pascals) {
-  return pascals * 0.000295299830714;
-}
-
-float tempCtoTempF(float tempC) {
-  return (tempC + 32) * 9 / 5;
 }
 
 void loop(void)
