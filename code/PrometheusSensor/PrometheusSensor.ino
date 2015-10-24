@@ -18,7 +18,7 @@
 #define SERVER_PORT         9091
 
 #define METRICS_JOB         "env_sensor"
-#define METRICS_INSTANCE    "LivingRoom"
+#define METRICS_INSTANCE    "Bathroom"
 
 const String metrics_url = "/metrics/job/" + String(METRICS_JOB) +
                            "/instance/" + String(METRICS_INSTANCE);
