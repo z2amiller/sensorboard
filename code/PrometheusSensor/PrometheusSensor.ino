@@ -18,12 +18,12 @@
 #define SERVER_PORT         9091
 
 #define METRICS_JOB         "env_sensor"
-#define METRICS_INSTANCE    "Bathroom"
+#define METRICS_INSTANCE    "Test"
 
 const String metrics_url = "/metrics/job/" + String(METRICS_JOB) +
                            "/instance/" + String(METRICS_INSTANCE);
 
-ADC_MODE(ADC_VCC);
+ADC_MODE(ADC_TOUT);
  
 // Initialize DHT sensor NOTE: For working with a faster than ATmega328p 16 MHz
 // Arduino chip, like an ESP8266, you need to increase the threshold for cycle
@@ -53,7 +53,7 @@ void setup(void)
   Serial.print("\n\r \n\rConnecting to WiFi.");
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
-    delay(250);
+    delay(100);
     Serial.print(".");
   }
   Serial.println("");
@@ -133,7 +133,8 @@ void loop(void)
   if (isValidTemp(temp)) {
     out +=  makeSensorVar("tempF") + " " + String(temp) + "\n";
   }
-  out += makeSensorVar("battery_millivolts") + " " + String(ESP.getVcc()) + "\n";
+  const float battery = analogRead(A0) * 10;
+  out += makeSensorVar("battery_millivolts") + " " + String(battery) + "\n";
   out += makeSensorVar("free_heap") + " " + String(ESP.getFreeHeap()) + "\n";
   out += makeSensorVar("bmp_tempC") + " " + String(bmp.readTemperature()) + "\n";
   out += makeSensorVar("pressure") + " " + String(bmp.readPressure()) + "\n";
@@ -142,7 +143,7 @@ void loop(void)
   sendMetrics(out);
   // Power off the sensor while the esp is in deep sleep.
   digitalWrite(DHTPWR, LOW);
-  ESP.deepSleep(120000000, WAKE_RF_DEFAULT);
+  ESP.deepSleep(240000000, WAKE_RF_DEFAULT);
   // It can take a while for the ESP to actually go to sleep.
   // When it wakes up we start again in setup().
   delay(5000);
