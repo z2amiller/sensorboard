@@ -133,7 +133,7 @@ void loop(void)
   if (isValidTemp(temp)) {
     out +=  makeSensorVar("tempF") + " " + String(temp) + "\n";
   }
-  const float battery = analogRead(A0) * 10;
+  const float battery = analogRead(A0) * 11;
   out += makeSensorVar("battery_millivolts") + " " + String(battery) + "\n";
   out += makeSensorVar("free_heap") + " " + String(ESP.getFreeHeap()) + "\n";
   out += makeSensorVar("bmp_tempC") + " " + String(bmp.readTemperature()) + "\n";
