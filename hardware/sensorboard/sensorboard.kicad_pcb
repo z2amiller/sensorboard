@@ -3,7 +3,7 @@
   (general
     (links 40)
     (no_connects 0)
-    (area 128.194999 72.314999 175.208001 91.642001)
+    (area 125.289 65.548599 175.208001 91.642001)
     (thickness 1.6)
     (drawings 8)
     (tracks 110)
@@ -87,7 +87,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory ../../../Users/amiller/Documents/KiCad/sensor_gerber/))
+      (outputdirectory /Users/amiller/projects/sensorboard/hardware/sensorboard/gerber/))
   )
 
   (net 0 "")
