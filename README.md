@@ -1,2 +1,88 @@
 # sensorboard
 Sensor board using ESP8266
+==========================
+
+This is a simple sensor board using an ESP8266.
+
+It is designed to run from 6 volts, or 4xAA batteries.  The software uses the
+deep sleep functions of the ESP8266 for power savings, and applies power to the
+sensors only when the ESP8266 is powered on.  It posts the sensor data to a 
+[prometheus](http://prometheus.io/) [pushgateway](https://github.com/prometheus/pushgateway).
+A copy of this sensor has run for more than two months on 4xAA batteries.
+Longer life can be achieved by using a longer sleep interval; the ESP8266
+consumes quite a bit of power at bootup and when communicating over wifi.
+
+Hardware:
+---------
+
+* [ESP8266](https://github.com/esp8266/Arduino) is a fully featured wifi
+  module with embedded microcontroller.  This project can make use of the
+  [ESP-07](http://www.banggood.com/ESP8266-ESP-07-Remote-Serial-Port-WIFI-Transceiver-Wireless-Module-p-961247.html)
+  module or any of the
+  [ESP-12](http://www.banggood.com/ESP8266-ESP-12E-Remote-Serial-Port-WIFI-Transceiver-Wireless-Module-p-980984.html)
+  variants - the extra pins at the bottom are unused.  If using the ESP-07
+  with the always-on status LED, you may want to desolder / pry off the
+  status LED to extend your battery life.
+* [DHT22](http://www.electrodragon.com/product/dht22-pre-order-link/) is a
+  temperature and humidity sensor.  It is actually the most expensive part
+  of this board, even more expensive than the ESP8266.
+* [BMP180](http://www.banggood.com/BMP180-Digital-Barometric-Pressure-Sensor-Module-Board-p-930690.html)
+  is a barometric pressure and altitude sensor.
+* [TC1262](http://ww1.microchip.com/downloads/en/DeviceDoc/21373C.pdf) 500ma
+  LDO for the 3.3v supply to the ESP8266.
+* Onboard voltage meter to track the battery voltage.  R4 and R5 make up
+  the voltage divider so should be 1% or better tolerance that are
+  fairly stable with temperature. 
+* Everything else on the board is simple and common - 10k pullup/pulldown
+  resistors, 10uF capacitors to stabilize the LDO, 100nF decoupling capacitors.
+* This board is intended to be hand-solderable. The smallest components are
+  0603 and are marked with hand-soldering pads.
+
+Software:
+---------
+
+* This is programmed in the Arduino environment.  It includes some standard
+  Adafruit libraries (for DHT22 and BMP085).  The newer "unified" sensor
+  libraries don't work with the ESP8266 yet, but the older ones work well.
+* This sensorboard posts the data to a prometheus gateway for easy graphing
+  and alerting.  The code to get the sensor values is pretty straightforward
+  and could be pretty easily adapted to other monitoring systems such as
+  Thingspeak or MQTT.
+
+Programming:
+------------
+
+* The sensorboard has a 6 pin programming header, and included in this
+  repository is a sensorboard_programmer module intended to be connected to
+  this programming header. 
+* The sensorboard programmer pulls out the reset and programming pins.  To
+  flash a new software version, connect the programmer and press and hold
+  the 'PROG' button while hitting reset.  This will reboot the ESP8266 into
+  flash mode.
+* The sensorboard is designed to use this
+  [CP2102 board](http://www.banggood.com/5Pcs-CJMCU-CP2102-USB-To-TTLSerial-Module-UART-STC-Downloader-p-980102.html)
+  for the USB interface, and
+  [these](http://www.banggood.com/100pcs-Mini-Micro-Momentary-Tactile-Tact-Switch-Push-Button-DIP-P4-p-917570.html)
+  cheap tactile switches.  That USB module solders right into the programmer
+  board but you could also wire up any USB breakout that supports 3.3 volts.
+* Unfortunately the configuration is part of the code.  You'll have to change
+  some of the constants in the code to use your wifi SSID/password,
+  prometheus pushgateway, etc.
+
+More Links:
+-----------
+
+* Order the [sensorboard](https://oshpark.com/shared_projects/ejUFJz9Y) on
+  OSHPark!
+* Order the [sensorboard programmer](https://oshpark.com/shared_projects/qODz99nZ)
+  on OSHPark!
+* Check out the [ESP8266 commmunity](http://reddit.com/r/ESP8266) on Reddit!
+
+TODO(z2amiller):
+---------------
+
+* Use an LDO that accepts a wider voltage range.
+* Add a picture of the sensorboard in action.
+* Add some screenshots of Prometheus graphs.
+* Create a prometheus setup tutuorial.
+* Create a prometheus dashboard for the ESP8266 sensor data.
