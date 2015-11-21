@@ -1,11 +1,11 @@
-(kicad_pcb (version 4) (host pcbnew "(2015-09-17 BZR 6202)-product")
+(kicad_pcb (version 4) (host pcbnew "(2015-10-28 BZR 6285)-product")
 
   (general
     (links 40)
     (no_connects 0)
     (area 125.289 65.548599 175.208001 91.642001)
     (thickness 1.6)
-    (drawings 19)
+    (drawings 21)
     (tracks 110)
     (zones 0)
     (modules 17)
@@ -87,7 +87,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory /Users/amiller/projects/sensorboard/hardware/sensorboard/gerber/))
+      (outputdirectory /Users/armil/projects/sensorboard/hardware/sensorboard/gerber/))
   )
 
   (net 0 "")
@@ -706,6 +706,12 @@
     )
   )
 
+  (gr_text "ESP sensorboard v2.2" (at 153.2 74) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
+  (gr_text "z2amiller\n" (at 152.4 89.8) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
   (gr_text "ESP-07\nESP-12" (at 155.702 75.946) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )

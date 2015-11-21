@@ -72,7 +72,7 @@ Programming:
 More Links:
 -----------
 
-* Order the [sensorboard](https://oshpark.com/shared_projects/ejUFJz9Y) on
+* Order the [sensorboard](https://oshpark.com/shared_projects/rGc3bDv8) on
   OSHPark!
 * Order the [sensorboard programmer](https://oshpark.com/shared_projects/qODz99nZ)
   on OSHPark!
