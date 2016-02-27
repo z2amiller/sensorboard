@@ -1,4 +1,4 @@
-update=Sunday, September 20, 2015 'PMt' 01:44:21 PM
+update=Saturday, February 27, 2016 'PMt' 01:40:35 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -60,3 +60,4 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=libraries/kicad-ESP8266/ESP8266
+LibName32=lmr16006y
