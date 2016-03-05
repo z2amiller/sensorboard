@@ -28,13 +28,15 @@ Hardware:
   of this board, even more expensive than the ESP8266.
 * [BMP180](http://www.banggood.com/BMP180-Digital-Barometric-Pressure-Sensor-Module-Board-p-930690.html)
   is a barometric pressure and altitude sensor.
-* [TC1262](http://ww1.microchip.com/downloads/en/DeviceDoc/21373C.pdf) 500ma
-  LDO for the 3.3v supply to the ESP8266.
+* [LMR16006YDDCR](http://www.ti.com/lit/ds/symlink/lmr16006.pdf) is a 600ma
+  adjustable voltage switching power regulator.  While much more expensive
+  than the LDO, batteries will last ~twice as long.
+* [NR4018T100M](http://www.yuden.co.jp/productdata/catalog/en/wound04_e.pdf)
+  is the 10uh inductor used as L1.
 * Onboard voltage meter to track the battery voltage.  R4 and R5 make up
   the voltage divider so should be 1% or better tolerance that are
   fairly stable with temperature. 
-* Everything else on the board is simple and common - 10k pullup/pulldown
-  resistors, 10uF capacitors to stabilize the LDO, 100nF decoupling capacitors.
+* Everything else on the board is simple and common.
 * This board is intended to be hand-solderable. The smallest components are
   0603 and are marked with hand-soldering pads.
 
@@ -53,7 +55,7 @@ Programming:
 ------------
 
 * The sensorboard has a 6 pin programming header, and included in this
-  repository is a sensorboard_programmer module intended to be connected to
+  repository is a sensorboard\_programmer module intended to be connected to
   this programming header. 
 * The sensorboard programmer pulls out the reset and programming pins.  To
   flash a new software version, connect the programmer and press and hold
@@ -69,19 +71,31 @@ Programming:
   some of the constants in the code to use your wifi SSID/password,
   prometheus pushgateway, etc.
 
+Versions:
+---------
+
+Check out the following branches for these released versions:
+
+* [sensorboard-3.1](https://github.com/z2amiller/sensorboard/tree/sensorboard-3.1)
+  [oshpark](https://oshpark.com/shared_projects/4DUu3wyO) UNTESTED: Same
+  switching power supply as 3.0 with a smaller footprint.
+* [sensorboard-3.0](https://github.com/z2amiller/sensorboard/tree/sensorboard-3.0)
+  [oshpark](https://oshpark.com/shared_projects/WbqAk6mQ) UNTESTED: Uses
+  a switching power supply for better battery life.
+* [sensorboard-2.2](https://github.com/z2amiller/sensorboard/tree/sensorboard-2.2)
+  [oshpark](https://oshpark.com/shared_projects/rGc3bDv8) TESTED: Most
+  recent tested sensorboard - accurately tracks remaining input battery voltage.
+
 More Links:
 -----------
 
-* Order the [sensorboard](https://oshpark.com/shared_projects/rGc3bDv8) on
-  OSHPark!
-* Order the [sensorboard programmer](https://oshpark.com/shared_projects/qODz99nZ)
+* Order the [sensorboard programmer](https://oshpark.com/shared_projects/fjlzVR1e)
   on OSHPark!
 * Check out the [ESP8266 commmunity](http://reddit.com/r/ESP8266) on Reddit!
 
 TODO(z2amiller):
 ---------------
 
-* Use an LDO that accepts a wider voltage range.
 * Add a picture of the sensorboard in action.
 * Add some screenshots of Prometheus graphs.
 * Create a prometheus setup tutuorial.
