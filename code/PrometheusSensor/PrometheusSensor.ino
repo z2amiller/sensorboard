@@ -22,12 +22,15 @@
 #define METRICS_JOB         "env_sensor"
 #define METRICS_INSTANCE    "MasterBedroom"
 
+#define MAX_LOOP_TIME_MS     10000
+
+
 const String metrics_url = "/metrics/job/" + String(METRICS_JOB) +
                            "/instance/" + String(METRICS_INSTANCE);
 
 ADC_MODE(ADC_TOUT);
 
-DHT dht(DHTPIN, DHTTYPE, 16); // 11 works fine for ESP8266
+DHT dht(DHTPIN, DHTTYPE, 11);
 
 Adafruit_BMP085 bmp;
 Ticker sleepTicker;
@@ -36,13 +39,15 @@ Ticker bmpTicker;
 unsigned long startTime;
 
 void sleepyTime() {
-  Serial.print("Shutting down and going to sleep.  Loop took ");
-  Serial.print(millis() - startTime);
-  Serial.println(" ms.");
-  WiFi.disconnect(true);
+  const int elapsed = millis() - startTime;
+  Serial.printf("Sleeping. Loop took %d ms\n", elapsed);
+  // If this sleep happened because of timeout, clear the
+  // Wifi state.
+  if (elapsed >= MAX_LOOP_TIME_MS) {
+    WiFi.disconnect(true);
+  }
   digitalWrite(DHTPWR, LOW);
-  //ESP.deepSleep(480000000, WAKE_RF_DEFAULT);
-  ESP.deepSleep(10000000, WAKE_RF_DEFAULT);
+  ESP.deepSleep(480000000, WAKE_RF_DEFAULT);
   // It can take a while for the ESP to actually go to sleep.
   // When it wakes up we start again in setup().
   delay(5000);
@@ -55,15 +60,15 @@ void bmpBegin() {
 }
 
 void waitForWifi() {
-  Serial.print("\n\r \n\rConnecting to WiFi.");
+  Serial.print("Connecting to WiFi.");
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
-    yield();
+    Serial.print(".");
+    delay(100);
   }
   Serial.println(" Done");
   Serial.println("ESP8266 Weather Sensor");
-  Serial.print("Connected to ");
-  Serial.println(WIFI_SSID);
+  Serial.printf("Connected to %s\n", WIFI_SSID);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 }
@@ -71,8 +76,9 @@ void waitForWifi() {
 void setup(void)
 {
   startTime = millis();
-  sleepTicker.once(12.0, &sleepyTime);
+  sleepTicker.once_ms(12000, &sleepyTime);
   Serial.begin(115200);
+  Serial.println();
   // Power on the sensors first.  Both the DHT22 and the bmp180
   // are very low power and can be powered from a ESP8266 GPIO pin.
   pinMode(DHTPWR, OUTPUT);
@@ -81,6 +87,7 @@ void setup(void)
   // Initialize the Software I2C library to talk to the BMP180 sensor.
   Wire.pins(12, 14);
   bmpTicker.attach_ms(100, &bmpBegin);
+  Serial.println("Using saved SSID: " + WiFi.SSID());
   if (WiFi.SSID() != WIFI_SSID) {
     Serial.println("Configuring persistent wifi...");
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -90,7 +97,6 @@ void setup(void)
   } else {
     Serial.println("Using saved wifi info...");
   }
-  // 
 }
 
 bool isValidHumidity(float humidity) {
@@ -99,12 +105,6 @@ bool isValidHumidity(float humidity) {
 
 bool isValidTemp(float temp) {
   return (!isnan(temp) && temp >= -100 && temp <= 212);
-}
-
-bool dhtPoll(float *temp, float *humidity) {
-  *temp = dht.readTemperature(true);
-  *humidity = dht.readHumidity();
-  return (isValidTemp(*temp) && isValidHumidity(*humidity));
 }
 
 MapMetric makeMetric(const String& name, const float value) {
@@ -118,14 +118,19 @@ void loop(void)
   PrometheusClient pclient =
       PrometheusClient(SERVER_IP, SERVER_PORT,
                        METRICS_JOB, METRICS_INSTANCE);
-
                            
   float temp, humidity;
-  while (!dhtPoll(&temp, &humidity)) {
+  do {
     delay(250);
-  }
+    temp = dht.readTemperature(true);
+    humidity = dht.readHumidity();  
+  } while (!(isValidTemp(temp) && isValidHumidity(humidity)));
+
+  const int dhtTime = millis() - startTime;
+  Serial.printf("DHT read took %d ms\n", dhtTime);
   waitForWifi();
-  WiFi.printDiag(Serial);
+  const int wifiTime = millis() - (startTime + dhtTime);
+  Serial.printf("WiFi init took an additional %d ms\n", wifiTime);
   
   if (isValidHumidity(humidity)) {
     pclient.AddMetric(makeMetric("humidity", humidity));
