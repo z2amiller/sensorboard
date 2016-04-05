@@ -44,7 +44,7 @@ void sleepyTime() {
   // If this sleep happened because of timeout, clear the
   // Wifi state.
   if (elapsed >= MAX_LOOP_TIME_MS) {
-    WiFi.disconnect(true);
+    WiFi.disconnect();
   }
   digitalWrite(DHTPWR, LOW);
   ESP.deepSleep(480000000, WAKE_RF_DEFAULT);
