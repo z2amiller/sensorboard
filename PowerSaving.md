@@ -13,19 +13,17 @@ Note that this means that the chip is totally reset when coming out of deep
 sleep.
 
 Example:
-'''
-void sleepFunc() {
-  // If this sleep happened because of timeout, clear the
-  // Wifi settings.  (Maybe the AP channel changed, etc)
-  if (elapsed >= MAX_LOOP_TIME_MS) {
-    WiFi.disconnect();
-  }
-  ESP.deepSleep(480000000, WAKE_RF_DEFAULT);
-  // It can take a while for the ESP to actually go to sleep.
-  // When it wakes up we start again in setup().
-  delay(5000);
-}
-'''
+    void sleepFunc() {
+      // If this sleep happened because of timeout, clear the
+      // Wifi settings.  (Maybe the AP channel changed, etc)
+      if (elapsed >= MAX_LOOP_TIME_MS) {
+        WiFi.disconnect();
+      }
+      ESP.deepSleep(480000000, WAKE_RF_DEFAULT);
+      // It can take a while for the ESP to actually go to sleep.
+      // When it wakes up we start again in setup().
+      delay(5000);
+    }
 
 ### Do not call WiFi.begin() in start().
 
@@ -37,19 +35,17 @@ configured SSID.  Also, it is good practice to clear the saved WiFi settings if
 the timer expires.  (See next section "Use watchdog timers")
 
 Example:
-'''
-#define WIFI_SSID           "Embedded Pie"
-void setup(void) {
-  ...
-  if (WiFi.SSID() != WIFI_SSID) {
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    WiFi.persistent(true);
-    WiFi.setAutoConnect(true);
-    WiFi.setAutoReconnect(true);
-  }
-  ...
-}
-'''
+    #define WIFI_SSID           "Embedded Pie"
+    void setup(void) {
+      ...
+      if (WiFi.SSID() != WIFI_SSID) {
+        WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+        WiFi.persistent(true);
+        WiFi.setAutoConnect(true);
+        WiFi.setAutoReconnect(true);
+      }
+      ...
+    }
 
 ### Use watchdog timers.
 
@@ -59,14 +55,11 @@ hours at a time with the WiFi radio on trying to associte if your
 AP is down, for example.
 
 Example:
-'''
-Ticker sleepTicker;
-
-void setup(void) {
- sleepTicker.once_ms(120000, &sleepFunc)
- ...
-}
-'''
+    Ticker sleepTicker;
+    void setup(void) {
+     sleepTicker.once_ms(120000, &sleepFunc)
+     ...
+    }
 
 ## Hardware Tips
 
