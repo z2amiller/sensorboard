@@ -33,6 +33,9 @@ Hardware:
   than the LDO, batteries will last ~twice as long.
 * [NR4018T100M](http://www.yuden.co.jp/productdata/catalog/en/wound04_e.pdf)
   is the 10uh inductor used as L1.
+* [BME280](http://www.mouser.com/ds/2/783/BST-BME280_DS001-11-844833.pdf) is
+  an integrated pressure, humidity, and temperature sensor.  Replaces the
+  DHT22 and BMP180 in version 4.0.
 * Onboard voltage meter to track the battery voltage.  R4 and R5 make up
   the voltage divider so should be 1% or better tolerance that are
   fairly stable with temperature. 
@@ -100,3 +103,4 @@ TODO(z2amiller):
 * Add some screenshots of Prometheus graphs.
 * Create a prometheus setup tutuorial.
 * Create a prometheus dashboard for the ESP8266 sensor data.
+* Finish up the code for sensorboard-4.0 with the BME280 sensor.
