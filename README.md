@@ -81,7 +81,8 @@ Check out the following branches for these released versions:
 
 * [sensorboard-4.0](https://github.com/z2amiller/sensorboard/tree/sensorboard-4.0)
   [oshpark](https://oshpark.com/shared_projects/D1xuf056) UNTESTED:
-  Replace the DHT22 and BMP180 with a BME280.
+  Replace the DHT22 and BMP180 with a BME280.  No longer hand-solderable,
+  needs a hot air station for the FGA-8 footprint BME280.
 * [sensorboard-3.1](https://github.com/z2amiller/sensorboard/tree/sensorboard-3.1)
   [oshpark](https://oshpark.com/shared_projects/4DUu3wyO) TESTED:
   Sensorboard with a switching power supply. Higher parts cost but ~1.6x
@@ -105,3 +106,5 @@ TODO(z2amiller):
 * Create a prometheus setup tutuorial.
 * Create a prometheus dashboard for the ESP8266 sensor data.
 * Finish up the code for sensorboard-4.0 with the BME280 sensor.
+* Create a sensorboard programmer with a regulator to power the ESP8266
+  through the 3v3 pin while programming.
