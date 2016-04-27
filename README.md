@@ -79,15 +79,16 @@ Versions:
 
 Check out the following branches for these released versions:
 
+* [sensorboard-4.0](https://github.com/z2amiller/sensorboard/tree/sensorboard-4.0)
+  [oshpark](https://oshpark.com/shared_projects/D1xuf056) UNTESTED:
+  Replace the DHT22 and BMP180 with a BME280.
 * [sensorboard-3.1](https://github.com/z2amiller/sensorboard/tree/sensorboard-3.1)
-  [oshpark](https://oshpark.com/shared_projects/4DUu3wyO) UNTESTED: Same
-  switching power supply as 3.0 with a smaller footprint.
-* [sensorboard-3.0](https://github.com/z2amiller/sensorboard/tree/sensorboard-3.0)
-  [oshpark](https://oshpark.com/shared_projects/WbqAk6mQ) UNTESTED: Uses
-  a switching power supply for better battery life.
+  [oshpark](https://oshpark.com/shared_projects/4DUu3wyO) TESTED:
+  Sensorboard with a switching power supply. Higher parts cost but ~1.6x
+  battery life.
 * [sensorboard-2.2](https://github.com/z2amiller/sensorboard/tree/sensorboard-2.2)
-  [oshpark](https://oshpark.com/shared_projects/rGc3bDv8) TESTED: Most
-  recent tested sensorboard - accurately tracks remaining input battery voltage.
+  [oshpark](https://oshpark.com/shared_projects/rGc3bDv8) TESTED:
+  Sensorboard using a LDO for simple build and lower parts cost.
 
 More Links:
 -----------
