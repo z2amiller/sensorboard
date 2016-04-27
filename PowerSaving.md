@@ -118,16 +118,18 @@ active state.  For example, if the device is drawing 100uA (0.1mA) while
 sleeping and 70mA while active, sleeps for 8 minutes between cycles, and is on
 for 10 seconds every cycle:
 
+AA batteries = ~2000mAhours or 7.2 million mA seconds
+
 Linear regulator:
 480 seconds * 0.1mA = 48mA seconds
 10 seconds * 70mA = 700mA seconds
 
-748 mA seconds / cycle = ~2,700 cycles on a AA battery, or about
-60 days on 4xAA batteries.
+748 mA seconds / cycle = ~9,700 cycles on a AA battery, or about
+54 days on 4xAA batteries.
 
 Switching regulator:
 480 seconds * 0.1mA = 48mA seconds
 10 seconds * 43mA = 430mA seconds
 
-478 mA seconds / cycle = ~4,100 cycles on a AA battery, or about
-90 days on 4xAA batteries.
+478 mA seconds / cycle = ~15,000 cycles on a AA battery, or about
+85 days on 4xAA batteries.
