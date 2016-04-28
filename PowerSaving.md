@@ -27,14 +27,15 @@ void sleepFunc() {
 }
 ```
 
-### Do not call WiFi.begin() in start().
+### Do not call WiFi.begin() in setup().
 
 The ESP8266 chip saves the last known wifi settings.  Calling WiFi.begin()
 wipes those out.  By calling WiFi.begin() only when it was needed, I shaved
 more than 2 seconds from the average amount of time it takes to associate with
-the AP.  WiFi.begin is called only if the saved SSID does not match the
-configured SSID.  Also, it is good practice to clear the saved WiFi settings if
-the timer expires.  (See next section "Use watchdog timers")
+the AP.  WiFi.begin() should be called only if the saved SSID does not match
+the configured SSID.  You can check the configured SSID with the WiFi.SSID()
+call.  Also, it is good practice to clear the saved WiFi settings if the timer
+expires.  (See next section "Use watchdog timers")
 
 Example:
 ```C++
@@ -56,7 +57,8 @@ void setup(void) {
 Set a timer for the maximum amount of time your polling loop
 should run.  This will prevent your device from sitting there for
 hours at a time with the WiFi radio on trying to associte if your
-AP is down, for example.
+AP is down, for example.  The ESP8266 has a built-in Ticker that
+takes a timeout and a callback.
 
 Example:
 ```C++
@@ -85,8 +87,11 @@ This means no [AMS1117](http://www.advanced-monolithic.com/pdf/ds1117.pdf)
 linear regulator which has a quiescent current of 5mA.  Look for low quiescent
 current parts.  If you are using a linear regulator, the
 [SPX3819M5](https://www.digikey.com/product-detail/en/exar-corporation/SPX3819M5-L-3-3%2FTR/1016-1873-1-ND/3586590)
-has a fairly low quiescent current of 90uA.  (Or, about 20,000 hours on a
-single AA battery)
+has a fairly low quiescent current of 90uA and a wide voltage range.  (Or,
+about 20,000 hours on a single AA battery)  I used the
+[TC1262](http://ww1.microchip.com/downloads/en/DeviceDoc/21373C.pdf) in the
+first versions of the sensorboard which has a 80uA quiescent current, but also
+has only a 6V max voltage rating.
 
 ### Supply power to sensors from a GPIO pin if the draw is low enough.
 
@@ -107,10 +112,11 @@ This complicates the build but is significantly more efficient.  Using a linear
 regulator, if your ESP is drawing 70mA at 3.3v, it will also draw 70mA at 6v,
 with the regulator burning the extra power as heat.
 
-When using a switching regulator, the draw becomes lower by a ratio of the
-output to input voltage.  Assuming a 90% efficient switching regulator and a 6v
-supply, drawing 70mA of 3.3v becomes:
-70mA * (3.3 / 6) * (1 / 0.9) = ~43mA input current @ 6V.
+When using a switching regulator like the
+[LMR16006](http://www.ti.com/lit/ds/symlink/lmr16006.pdf) the draw becomes
+lower by a ratio of the output to input voltage.  Assuming a 90% efficient
+switching regulator and a 6v supply, drawing 70mA of 3.3v becomes: 70mA * (3.3
+/ 6) * (1 / 0.9) = ~43mA input current @ 6V.
 
 This is significant because even though the device is only on for a short
 amount of time, overall power consumption is dominated by the device in the
