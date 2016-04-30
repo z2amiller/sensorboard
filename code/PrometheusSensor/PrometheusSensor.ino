@@ -72,8 +72,9 @@ void setup(void)
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while (1);
   }
+  // Use the i2cbase library to directly modify some of the
+  // BME280 configuration registers.
   i2cBase bconfig(0x76);
-  
   // 1x sampling for humidity.
   bconfig.write8(0xF2, 0x01);
   // 1x sampling for temperature and pressure, sleep mode on.
