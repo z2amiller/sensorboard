@@ -1,4 +1,4 @@
-update=Saturday, February 27, 2016 'PMt' 01:40:35 PM
+update=Sunday, April 03, 2016 'PMt' 09:56:10 PM
 version=1
 last_client=kicad
 [pcbnew]
@@ -27,7 +27,7 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=/Users/amiller/Documents/KiCad;../../../Users/amiller/Documents/KiCad/libraries/kicad-ESP8266
+LibDir=/Users/armil/projects/snippets/breakouts/bme280
 [eeschema/libraries]
 LibName1=sensorboard-rescue
 LibName2=power
@@ -61,3 +61,4 @@ LibName29=contrib
 LibName30=valves
 LibName31=libraries/kicad-ESP8266/ESP8266
 LibName32=lmr16006y
+LibName33=bme280

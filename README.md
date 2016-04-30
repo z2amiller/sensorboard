@@ -33,6 +33,9 @@ Hardware:
   than the LDO, batteries will last ~twice as long.
 * [NR4018T100M](http://www.yuden.co.jp/productdata/catalog/en/wound04_e.pdf)
   is the 10uh inductor used as L1.
+* [BME280](http://www.mouser.com/ds/2/783/BST-BME280_DS001-11-844833.pdf) is
+  an integrated pressure, humidity, and temperature sensor.  Replaces the
+  DHT22 and BMP180 in version 4.0.
 * Onboard voltage meter to track the battery voltage.  R4 and R5 make up
   the voltage divider so should be 1% or better tolerance that are
   fairly stable with temperature. 
@@ -76,15 +79,17 @@ Versions:
 
 Check out the following branches for these released versions:
 
+* [sensorboard-4.0](https://github.com/z2amiller/sensorboard/tree/sensorboard-4.0)
+  [oshpark](https://oshpark.com/shared_projects/D1xuf056) UNTESTED:
+  Replace the DHT22 and BMP180 with a BME280.  No longer hand-solderable,
+  needs a hot air station for the FGA-8 footprint BME280.
 * [sensorboard-3.1](https://github.com/z2amiller/sensorboard/tree/sensorboard-3.1)
-  [oshpark](https://oshpark.com/shared_projects/4DUu3wyO) UNTESTED: Same
-  switching power supply as 3.0 with a smaller footprint.
-* [sensorboard-3.0](https://github.com/z2amiller/sensorboard/tree/sensorboard-3.0)
-  [oshpark](https://oshpark.com/shared_projects/WbqAk6mQ) UNTESTED: Uses
-  a switching power supply for better battery life.
+  [oshpark](https://oshpark.com/shared_projects/4DUu3wyO) TESTED:
+  Sensorboard with a switching power supply. Higher parts cost but ~1.6x
+  battery life.
 * [sensorboard-2.2](https://github.com/z2amiller/sensorboard/tree/sensorboard-2.2)
-  [oshpark](https://oshpark.com/shared_projects/rGc3bDv8) TESTED: Most
-  recent tested sensorboard - accurately tracks remaining input battery voltage.
+  [oshpark](https://oshpark.com/shared_projects/rGc3bDv8) TESTED:
+  Sensorboard using a LDO for simple build and lower parts cost.
 
 More Links:
 -----------
@@ -100,3 +105,6 @@ TODO(z2amiller):
 * Add some screenshots of Prometheus graphs.
 * Create a prometheus setup tutuorial.
 * Create a prometheus dashboard for the ESP8266 sensor data.
+* Finish up the code for sensorboard-4.0 with the BME280 sensor.
+* Create a sensorboard programmer with a regulator to power the ESP8266
+  through the 3v3 pin while programming.
