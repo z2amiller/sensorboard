@@ -81,17 +81,29 @@ traces.  I have done this on an ESP-07 without affecting the module.
 The LED on ESP-12x modules only blinks during serial transmission,
 which is infrequent enough not to worry about.
 
-### Minimize quiescent current.
+### If using a linear regulator, use one with low quiescent current.
 
 This means no [AMS1117](http://www.advanced-monolithic.com/pdf/ds1117.pdf)
 linear regulator which has a quiescent current of 5mA.  Look for low quiescent
 current parts.  If you are using a linear regulator, the
 [SPX3819M5](https://www.digikey.com/product-detail/en/exar-corporation/SPX3819M5-L-3-3%2FTR/1016-1873-1-ND/3586590)
 has a fairly low quiescent current of 90uA and a wide voltage range.  (Or,
-about 20,000 hours on a single AA battery)  I used the
-[TC1262](http://ww1.microchip.com/downloads/en/DeviceDoc/21373C.pdf) in the
-first versions of the sensorboard which has a 80uA quiescent current, but also
-has only a 6V max voltage rating.
+about 20,000 hours on a single AA battery).
+
+Other good choices for ESP8266 regulators:
+
+* [MCP1700](http://ww1.microchip.com/downloads/en/DeviceDoc/20001826C.pdf)
+  (up to 6V at 1.6uA quiescent) or the
+  [MCP1702](http://ww1.microchip.com/downloads/en/DeviceDoc/22008E.pdf)
+  (up to 13.2V at 2.0uA quiescent).  Both of these regulators can
+  supply 250mA constant and short 500mA bursts, which is perfect for
+  the ESP8266 with its short bursts of current draw while transmitting.
+  These are available in fixed 3.3V versions.  Available in both surface
+  mount and TO-92 packages for under $US0.50 in single quantity.
+
+* [HT73333-A](http://www.angeladvance.com/HT73xx.pdf) is a fixed 3.3V
+  250mA regulator with a 4uA quiescent current available cheaply from
+  AliExpress.  Also available in both surface mount and TO-92 packages.
 
 ### Supply power to sensors from a GPIO pin if the draw is low enough.
 
@@ -112,11 +124,11 @@ This complicates the build but is significantly more efficient.  Using a linear
 regulator, if your ESP is drawing 70mA at 3.3v, it will also draw 70mA at 6v,
 with the regulator burning the extra power as heat.
 
-When using a switching regulator like the
-[LMR16006](http://www.ti.com/lit/ds/symlink/lmr16006.pdf) the draw becomes
-lower by a ratio of the output to input voltage.  Assuming a 90% efficient
-switching regulator and a 6v supply, drawing 70mA of 3.3v becomes: 70mA * (3.3
-/ 6) * (1 / 0.9) = ~43mA input current @ 6V.
+When using a switching regulator, the draw becomes lower by a ratio of the
+output to input voltage.  Assuming a 90% efficient switching regulator and a 6v
+supply, drawing 70mA of 3.3v becomes:
+
+    70mA * (3.3 / 6) * (1 / 0.9) = ~43mA input current @ 6V.
 
 This is significant because even though the device is only on for a short
 amount of time, overall power consumption is dominated by the device in the
@@ -124,18 +136,43 @@ active state.  For example, if the device is drawing 100uA (0.1mA) while
 sleeping and 70mA while active, sleeps for 8 minutes between cycles, and is on
 for 10 seconds every cycle:
 
-AA batteries = ~2000mAhours or 7.2 million mA seconds
+    AA batteries = ~2000mAhours or 7.2 million mA seconds
 
 Linear regulator:
-480 seconds * 0.1mA = 48mA seconds
-10 seconds * 70mA = 700mA seconds
+    480 seconds * 0.1mA = 48mA seconds
+    10 seconds * 70mA = 700mA seconds
 
-748 mA seconds / cycle = ~9,700 cycles on a AA battery, or about
-54 days on 4xAA batteries.
+    748 mA seconds / cycle = ~9,700 cycles on a AA battery, or about
+    54 days on 4xAA batteries.
 
 Switching regulator:
-480 seconds * 0.1mA = 48mA seconds
-10 seconds * 43mA = 430mA seconds
+    480 seconds * 0.1mA = 48mA seconds
+    10 seconds * 43mA = 430mA seconds
 
-478 mA seconds / cycle = ~15,000 cycles on a AA battery, or about
-85 days on 4xAA batteries.
+    478 mA seconds / cycle = ~15,000 cycles on a AA battery, or about
+    85 days on 4xAA batteries.
+
+Good switching regulators for the ESP8266:
+
+* The [LMR16006](http://www.ti.com/lit/ds/symlink/lmr16006.pdf) is an adjustable
+  output 600mA switching regulator that can take a very wide range of input
+  voltages, up to 60V.  It has a quiescent current of 28uA.
+
+* The [LM3671](http://www.ti.com/lit/ds/symlink/lm3671.pdf) is available in
+  both fixed and adjustable models.  It only accepts up to 6V input but is
+  perfect for a 5v or single LiPo powered device.  It has a quiescent current
+  of only 16uA.
+
+### Do not use all-in-one boards like the WeMos D1 Mini or NodeMCU.
+
+These boards are excellent for prototyping, but they hae some real downsides
+when deployed in a low power application.
+
+First, they often have cheap regulators with high quiescent current, like the
+AMS1117. (See above why this is bad).
+
+Worse, these boards have an "always on" USB UART bridge like a CP2102.  The
+CP2102 datasheet says that the quiescent current is around 20mA!  This means
+that even if you have put your ESP8266 is in deep sleep mode, the other stuff
+on the board is conspiring to draw 20-25mA and will run your batteries down
+quickly.
