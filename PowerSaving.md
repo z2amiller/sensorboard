@@ -74,7 +74,7 @@ void setup(void) {
 ### Eliminate "power" or other always-on LEDs.
 
 Some ESP modules (ESP-07) have an always on "power" LED.  These take around
-10ma of current to run, or about 200 hours to drain a single AA battery.  If
+10mA of current to run, or about 200 hours to drain a single AA battery.  If
 you have a status LED on board, disable it by de-soldering it or cutting the
 traces.  I have done this on an ESP-07 without affecting the module.
 
@@ -86,9 +86,10 @@ which is infrequent enough not to worry about.
 This means no [AMS1117](http://www.advanced-monolithic.com/pdf/ds1117.pdf)
 linear regulator which has a quiescent current of 5mA.  Look for low quiescent
 current parts.  If you are using a linear regulator, the
-[SPX3819M5](https://www.digikey.com/product-detail/en/exar-corporation/SPX3819M5-L-3-3%2FTR/1016-1873-1-ND/3586590)
-has a fairly low quiescent current of 90uA and a wide voltage range.  (Or,
-about 20,000 hours on a single AA battery).
+[SPX3819M5](https://www.exar.com/content/document.ashx?id=615)
+has a fairly low quiescent current of 90uA and a wide voltage range -
+up to 16V.  At 90uA, it will take about about two and a half years to
+discharge AA batteries.
 
 Other good choices for ESP8266 regulators:
 
