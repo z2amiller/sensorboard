@@ -53,6 +53,9 @@ Software:
   and alerting.  The code to get the sensor values is pretty straightforward
   and could be pretty easily adapted to other monitoring systems such as
   Thingspeak or MQTT.
+* The [prometheus libraries](https://github.com/z2amiller/libraries/tree/master/prometheus)
+  libraries are available in my [libraries](https://github.com/z2amiller/libraries)
+  repository. The required i2c library is there as well.
 
 Programming:
 ------------
